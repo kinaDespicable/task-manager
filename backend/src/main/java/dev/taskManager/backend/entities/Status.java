@@ -1,5 +1,6 @@
 package dev.taskManager.backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,7 @@ public class Status implements Serializable {
     @Column(name = "status_name", nullable = false, length = 50)
     private String statusName;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "status")
     private Set<Task> tasks = new LinkedHashSet<>();
 
