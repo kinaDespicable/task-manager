@@ -52,7 +52,7 @@ public class RoleServiceImpl implements RoleService {
             if(Objects.nonNull(role.getRoleName()) && !"".equalsIgnoreCase(role.getRoleName()))
                 fetchedRole.setRoleName(role.getRoleName());
             return roleRepository.save(fetchedRole);
-        }).get();
+        }).orElseThrow(()-> new RoleNotFoundException("Role with id: ["+id+"] not found"));
     }
 
     @Override

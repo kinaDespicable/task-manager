@@ -1,5 +1,6 @@
 package dev.taskManager.backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,7 @@ public class Role implements Serializable {
     @Column(name = "role_name", nullable = false, length = 20)
     private String roleName;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "role")
     private Set<User> users = new LinkedHashSet<>();
 

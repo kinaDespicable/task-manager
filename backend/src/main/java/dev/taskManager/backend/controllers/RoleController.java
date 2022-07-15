@@ -27,7 +27,7 @@ public class RoleController {
         return new ResponseEntity<>(roleService.fetchRoleById(id),HttpStatus.OK);
     }
     @GetMapping("/role")
-    public ResponseEntity<?> getRoleByName(@RequestParam String roleName){
+    public ResponseEntity<?> getRoleByName(@RequestParam("name") String roleName){
         return new ResponseEntity<>(roleService.fetchRoleByRoleName(roleName),HttpStatus.OK);
     }
     @GetMapping("/roles")
@@ -36,7 +36,7 @@ public class RoleController {
     }
     @PutMapping("/role/{id}")
     public ResponseEntity<?> updateRole(@PathVariable Integer id, @RequestBody Role role){
-        return new ResponseEntity<Role>(roleService.updateRole(id, role),HttpStatus.OK);
+        return new ResponseEntity<>(roleService.updateRole(id, role),HttpStatus.OK);
     }
     @DeleteMapping("/role/{id}")
     public Boolean deleteRole(@PathVariable Integer id){
