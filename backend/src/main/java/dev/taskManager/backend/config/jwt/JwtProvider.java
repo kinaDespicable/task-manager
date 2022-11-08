@@ -1,5 +1,6 @@
 package dev.taskManager.backend.config.jwt;
 
+import dev.taskManager.backend.model.entity.User;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
@@ -36,13 +37,21 @@ public class JwtProvider {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         var roles = userDetails.getAuthorities()
                 .stream().map(grantedAuthority -> new SimpleGrantedAuthority(grantedAuthority.getAuthority())).toList();
-        return doTokenGeneration(userDetails, request, ACCESS_TOKEN_EXPIRATION)
+        return doTokenGeneration(userDetails, request, ACCESS_TOKEN_EXPIRATION, ChronoUnit.MINUTES)
                 .claim("roles", roles)
                 .compact();
     }
+
+    public String generateAccessToken(User user, HttpServletRequest request){
+        var role = user.getRole().getRoleName();
+        return doTokenGeneration(user, request, ACCESS_TOKEN_EXPIRATION, ChronoUnit.MINUTES)
+                .claim("roles", List.of(new SimpleGrantedAuthority(role)))
+                .compact();
+    }
+
     public String generateRefreshToken(Authentication authentication, HttpServletRequest request){
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return doTokenGeneration(userDetails, request, REFRESH_TOKEN_EXPIRATION).compact();
+        return doTokenGeneration(userDetails, request, REFRESH_TOKEN_EXPIRATION, ChronoUnit.MINUTES).compact();
     }
 
     public String getUsername(String token){
@@ -62,14 +71,22 @@ public class JwtProvider {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    private JwtBuilder doTokenGeneration(UserDetails user, HttpServletRequest request, int expiration){
+    private JwtBuilder doTokenGeneration(UserDetails user, HttpServletRequest request, int expiration, ChronoUnit chronoUnit){
         return Jwts.builder()
                 .setIssuer(request.getRequestURL().toString())
                 .setIssuedAt(Date.from(Instant.now()))
-                .setExpiration(Date.from(Instant.now().plus(expiration, ChronoUnit.MINUTES)))
+                .setExpiration(Date.from(Instant.now().plus(expiration, chronoUnit)))
                 .setSubject(user.getUsername())
                 .signWith(getKey(secret));
     }
 
+    private JwtBuilder doTokenGeneration(User user, HttpServletRequest request, int expiration, ChronoUnit chronoUnit) {
+        return Jwts.builder()
+                .setIssuer(request.getRequestURL().toString())
+                .setIssuedAt(Date.from(Instant.now()))
+                .setExpiration(Date.from(Instant.now().plus(expiration, chronoUnit)))
+                .setSubject(user.getEmail())
+                .signWith(getKey(secret));
+    }
 
 }

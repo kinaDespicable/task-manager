@@ -50,6 +50,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+        logger.info("Authentication token: {}", authResult);
         final String accessToken = jwtProvider.generateAccessToken(authResult, request);
         final String refreshToken = jwtProvider.generateRefreshToken(authResult, request);
         Map<String,String> tokens = new HashMap<>();

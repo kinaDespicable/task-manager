@@ -54,6 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session-> session.sessionCreationPolicy(STATELESS))
+                .authorizeRequests(request-> request.mvcMatchers("/auth/**").permitAll())
                 .authorizeRequests(request-> request.mvcMatchers("/admin/**").hasRole("ADMIN"))
                 .authorizeRequests(request-> request.mvcMatchers("/role/**").hasRole("ADMIN"))
                 .authorizeRequests(request-> request.mvcMatchers("/status/**").hasRole("ADMIN"))
