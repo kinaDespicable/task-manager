@@ -26,7 +26,7 @@ public class Status implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "status_id", nullable = false)
-    private Integer id;
+    private Long id;
 
     @JsonProperty("status_name")
     @Column(name = "status_name", nullable = false, length = 50)
