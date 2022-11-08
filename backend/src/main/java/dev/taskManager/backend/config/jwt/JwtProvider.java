@@ -7,6 +7,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -18,14 +19,15 @@ import java.sql.Date;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
 @SuppressWarnings("unchecked")
 public class JwtProvider {
 
-    private final int ACCESS_TOKEN_EXPIRATION = 5;
-    private final int REFRESH_TOKEN_EXPIRATION = 30;
+    private static final int ACCESS_TOKEN_EXPIRATION = 5;
+    private static final int REFRESH_TOKEN_EXPIRATION = 30;
 
     @Value("${jwt.secret}")
     private String secret;
@@ -47,8 +49,9 @@ public class JwtProvider {
         return getParser().parseClaimsJws(token).getBody().getSubject();
     }
 
-    public List<SimpleGrantedAuthority> getAuthorities(String token){
-        return (List<SimpleGrantedAuthority>) getParser().parseClaimsJws(token).getBody().get("roles");
+    public List<Map<String,String>> getAuthorities(String token){
+        System.out.println(getParser().parseClaimsJws(token).getBody().get("roles"));
+        return (List<Map<String,String>>) getParser().parseClaimsJws(token).getBody().get("roles");
     }
 
     private JwtParser getParser(){

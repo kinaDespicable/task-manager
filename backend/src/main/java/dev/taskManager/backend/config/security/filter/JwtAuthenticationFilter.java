@@ -52,8 +52,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         final String accessToken = jwtProvider.generateAccessToken(authResult, request);
         final String refreshToken = jwtProvider.generateRefreshToken(authResult, request);
-        System.out.println(accessToken);
-        System.out.println(refreshToken);
         Map<String,String> tokens = new HashMap<>();
         tokens.put("access_token", accessToken);
         tokens.put("refresh_token", refreshToken);
