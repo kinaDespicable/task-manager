@@ -1,8 +1,9 @@
-package dev.taskManager.backend.config.beans;
+package dev.taskManager.backend.config.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
@@ -16,5 +17,8 @@ public class Utils {
         new ObjectMapper()
                 .registerModule(new JavaTimeModule())
                 .writeValue(response.getOutputStream(), responseBody);
+    }
+    public static boolean isAdmin(HttpServletRequest request){
+        return request.getRequestURI().contains("/admin/");
     }
 }

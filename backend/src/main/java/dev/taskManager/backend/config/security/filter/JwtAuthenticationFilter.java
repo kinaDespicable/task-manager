@@ -1,7 +1,7 @@
 package dev.taskManager.backend.config.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.taskManager.backend.config.beans.Utils;
+import dev.taskManager.backend.config.utils.Utils;
 import dev.taskManager.backend.config.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
