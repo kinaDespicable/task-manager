@@ -4,7 +4,6 @@ import dev.taskManager.backend.config.utils.Utils;
 import dev.taskManager.backend.model.request.role.UpdateRoleRequest;
 import dev.taskManager.backend.model.request.user.NewUserRequest;
 import dev.taskManager.backend.service.AuthService;
-import dev.taskManager.backend.service.RoleService;
 import dev.taskManager.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

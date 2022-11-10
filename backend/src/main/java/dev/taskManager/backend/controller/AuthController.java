@@ -1,7 +1,7 @@
 package dev.taskManager.backend.controller;
 
-import dev.taskManager.backend.config.utils.Utils;
 import dev.taskManager.backend.config.jwt.JwtProvider;
+import dev.taskManager.backend.config.utils.Utils;
 import dev.taskManager.backend.model.entity.User;
 import dev.taskManager.backend.model.request.user.NewUserRequest;
 import dev.taskManager.backend.service.AuthService;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
