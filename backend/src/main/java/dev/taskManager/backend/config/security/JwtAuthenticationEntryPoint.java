@@ -10,9 +10,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.Instant;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
@@ -25,11 +22,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         logger.error("AUTHENTICATION PROCESS HAS BEEN FAILED.");
 
-        Map<String,Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("success", false);
-        responseBody.put("timestamp", Instant.now());
-        responseBody.put("status", UNAUTHORIZED);
-        responseBody.put("status_code", UNAUTHORIZED.value());
+        var responseBody = Utils.generateResponseBody(UNAUTHORIZED, false);
         responseBody.put("error_type", "AUTHENTICATION_ERROR");
         responseBody.put("error", authException.getMessage());
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
