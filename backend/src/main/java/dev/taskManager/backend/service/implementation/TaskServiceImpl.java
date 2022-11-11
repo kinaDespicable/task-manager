@@ -1,7 +1,9 @@
 package dev.taskManager.backend.service.implementation;
 
+import dev.taskManager.backend.exception.exceptions.ResourceNotFoundException;
 import dev.taskManager.backend.model.entity.Task;
 import dev.taskManager.backend.model.entity.User;
+import dev.taskManager.backend.model.request.status.UpdateStatusRequest;
 import dev.taskManager.backend.model.request.task.NewTaskRequest;
 import dev.taskManager.backend.model.response.CreatedResponse;
 import dev.taskManager.backend.model.response.TaskSummary;
@@ -12,6 +14,8 @@ import dev.taskManager.backend.service.StatusService;
 import dev.taskManager.backend.service.TaskService;
 import dev.taskManager.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +34,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
+
+    public static final Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
+
     private final TaskRepository taskRepository;
     private final UserService userService;
     private final StatusService statusService;
@@ -75,6 +82,24 @@ public class TaskServiceImpl implements TaskService {
                 .statusCode(HttpStatus.CREATED.value())
                 .data(task)
                 .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Task fetchById(Long id){
+        return taskRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Task with id: ["+id+"] not found."));
+    }
+
+    @Override
+    @Transactional
+    public Task updateStatus(Long id, UpdateStatusRequest statusRequest) {
+        var task = fetchById(id);
+        var status = statusService.fetchByName(statusRequest.status());
+        task.setStatus(status);
+        var entity = taskRepository.save(task);
+        logger.info("Record has been updated. Record id: {}.", id);
+        return entity;
     }
 
 }

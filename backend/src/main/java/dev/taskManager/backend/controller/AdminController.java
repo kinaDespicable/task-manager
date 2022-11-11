@@ -2,6 +2,7 @@ package dev.taskManager.backend.controller;
 
 import dev.taskManager.backend.config.utils.Utils;
 import dev.taskManager.backend.model.request.role.UpdateRoleRequest;
+import dev.taskManager.backend.model.request.status.UpdateStatusRequest;
 import dev.taskManager.backend.model.request.task.NewTaskRequest;
 import dev.taskManager.backend.model.request.user.NewUserRequest;
 import dev.taskManager.backend.service.AuthService;
@@ -24,7 +25,6 @@ public class AdminController {
 
     private final AuthService authService;
     private final UserService userService;
-
     private final TaskService taskService;
 
     @PostMapping("/auth/register")
@@ -42,6 +42,11 @@ public class AdminController {
     @PatchMapping("/update/role/user/{id}")
     public ResponseEntity<?> updateRole(@PathVariable Long id, @RequestBody UpdateRoleRequest roleRequest){
         return new ResponseEntity<>(userService.updateRole(id,roleRequest), HttpStatus.OK);
+    }
+
+    @PatchMapping("/update/task/{id}/status")
+    public ResponseEntity<?> updateTaskStatus(@PathVariable Long id, @RequestBody UpdateStatusRequest statusRequest){
+        return new ResponseEntity<>(taskService.updateStatus(id, statusRequest), HttpStatus.OK);
     }
 
     @GetMapping("/user/all")
