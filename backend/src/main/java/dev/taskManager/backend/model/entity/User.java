@@ -10,8 +10,12 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
+
+import static javax.persistence.CascadeType.*;
+import static javax.persistence.CascadeType.PERSIST;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -49,19 +53,22 @@ public class User implements Serializable {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Set<Task> tasks = new LinkedHashSet<>();
 
-    @ManyToMany
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @JoinTable(name = "employee_tasks",
-            joinColumns = @JoinColumn(name = "employee_id"),
-            inverseJoinColumns = @JoinColumn(name = "task_id"))
-    private Set<Task> worksOn = new LinkedHashSet<>();
-
-    @ManyToMany
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {DETACH, MERGE, REFRESH,PERSIST,})
     @JoinTable(name = "responsible_task",
-            joinColumns = @JoinColumn(name = "responsible_id"),
-            inverseJoinColumns = @JoinColumn(name = "task_id"))
-    private Set<Task> responsibleFor = new LinkedHashSet<>();
+            joinColumns = @JoinColumn(name = "responsible_id", referencedColumnName = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "task_id", referencedColumnName = "task_id"))
+    private Set<Task> responsibleFor = new HashSet<>();
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {DETACH, MERGE, REFRESH,PERSIST,})
+    @JoinTable(name = "employee_task",
+            joinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "task_id", referencedColumnName = "task_id"))
+    private Set<Task> worksOn = new HashSet<>();
+
+
+
 
     public static Builder builder(){
         return new Builder();

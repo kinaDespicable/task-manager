@@ -2,12 +2,15 @@ package dev.taskManager.backend.controller;
 
 import dev.taskManager.backend.config.utils.Utils;
 import dev.taskManager.backend.model.request.role.UpdateRoleRequest;
+import dev.taskManager.backend.model.request.task.NewTaskRequest;
 import dev.taskManager.backend.model.request.user.NewUserRequest;
 import dev.taskManager.backend.service.AuthService;
+import dev.taskManager.backend.service.TaskService;
 import dev.taskManager.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,10 +25,18 @@ public class AdminController {
     private final AuthService authService;
     private final UserService userService;
 
+    private final TaskService taskService;
+
     @PostMapping("/auth/register")
     public ResponseEntity<?> register(@RequestBody @Valid NewUserRequest userRequest, HttpServletRequest request){
         boolean isAdmin = Utils.isAdmin(request);
         return new ResponseEntity<>(authService.register(userRequest, isAdmin), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/task/new")
+    public ResponseEntity<?> createTask(@RequestBody @Valid NewTaskRequest taskRequest){
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        return new ResponseEntity<>(taskService.create(taskRequest, authentication), HttpStatus.CREATED);
     }
 
     @PatchMapping("/update/role/user/{id}")
